@@ -10,8 +10,10 @@ This is accompanying code that generates the figures of our paper on TET functio
 
 Prior to any analysis, after cloning the repository, please download first the necessary data by opening an R terminal in the root directory of the cloned repository and running:
 
-`source("scripts/download_data.R")`
-`download_full_data()`
+```r
+source("scripts/download_data.R")
+download_full_data()
+```
 
 This will download all the necessary data including processed metacell objects necessary for generating the figures. You can also download a minimal version ( `download_minimal_data()` ) in which case you would need to rerun all the notebooks prior to _generate-figures_ (see section *Notebook order* below.)
 
