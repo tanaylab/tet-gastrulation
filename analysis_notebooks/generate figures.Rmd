@@ -1,0 +1,117 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.4
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir353
+---
+
+```{r}
+## The working directory should be the root of the cloned repository with scrna_db, figs, data as subfolders
+setwd("../")
+```
+
+```{r}
+library("dplyr")
+library("zoo")
+library("metacell")
+library("tgstat")
+library("ggpubr")
+library("qvalue")
+library("gridExtra")
+library("Matrix")
+library("tidyr")
+library("ggplot2")
+library("ggrepel")
+
+```
+
+```{r}
+scdb_init("scrna_db/",force_reinit = T)
+```
+
+```{r}
+source("scripts/pipeline/atlas_proj_wt10.R")
+source("scripts/pipeline/transfer_time_annotation.R")
+```
+
+#### Generate Figure 1
+
+```{r}
+source("scripts/paper_figures/fig1.R")
+generate_figure1_plots()
+```
+
+#### Generate Figure 2
+
+```{r}
+source("scripts/paper_figures/fig2.R")
+generate_figure2_plots()
+```
+
+#### Generate Figure 3
+
+```{r}
+source("scripts/paper_figures/fig3.R")
+generate_figure3_plots()
+```
+
+#### Generate Figure 4
+
+```{r}
+source("scripts/paper_figures/fig4.R")
+generate_figure4_plots()
+```
+
+#### Generate Figure 6
+
+```{r}
+source("scripts/paper_figures/fig6.R")
+generate_figure6_plots()
+```
+
+#### Generate Figure S2
+
+```{r}
+source("scripts/paper_figures/fig_s2.R")
+generate_figure_s2_plots()
+```
+
+#### Generate Figure S3
+
+```{r}
+source("scripts/paper_figures/fig_s3.R")
+generate_figure_s3_plots()
+```
+
+#### Generate Figure S4
+
+```{r}
+source("scripts/paper_figures/fig_s4.R")
+generate_figure_s4_plots()
+```
+
+#### Generate Figure S5
+
+```{r}
+source("scripts/paper_figures/fig_s5.R")
+generate_figure_s5_plots()
+```
+
+#### Generate Figure S6
+
+```{r}
+source("scripts/paper_figures/fig_s6.R")
+generate_figure_s6_plots()
+```
+
+```{r}
+
+```

@@ -20,7 +20,13 @@ See `files.md` for a description of all the downloaded files. TODO
 
 ## Necessary R packages
 
-The initialization script (`scripts/init.R`) installs automatically the necessary R packages to run the notebooks. The analysis was done using R 4.0.5 and the following packages:
+You can install the necessary R packages by running:
+
+```r
+remotes::install_github("tanaylab/tet-gastrulation", subdir = "scripts/tet.gastru")
+```
+
+The initialization script (`scripts/init.R`) loads automatically the necessary R packages to run the notebooks. The analysis was done using R 4.0.5 and the following packages:
 
 - gridExtra 2.3
 - qvalue 2.22.0
@@ -38,7 +44,6 @@ The initialization script (`scripts/init.R`) installs automatically the necessar
 - metacell 0.3.7
 - Matrix 1.3-4
 
-
 ## Notebook order 
 
 You should run the notebooks _import_plates_ and _gating_ first and _generate-figures_ last.
@@ -50,7 +55,8 @@ You should run the notebooks _import_plates_ and _gating_ first and _generate-fi
 5. Control-tetraploid-complemented-embryos-processing
 6. DKO-chimera-embryos-processing
 7. AAV_Cre-TKO-embryos-processing
-8. generate-figures
+8. Methylation
+9. generate-figures
 
 ## Find a specific figure TODO
 
@@ -63,8 +69,18 @@ We also provide a docker image which contains all the needed dependencies, to us
 Download the analysis files: 
 
 ```bash
-wget https://metabric-rrbs.s3.eu-west-1.amazonaws.com/analysis_files.tar.gz
-tar xvzf analysis_files.tar.gz
+wget https://tet-gastrulation.s3.eu-west-1.amazonaws.com/tet_umi_tables.tar.gz
+wget https://tet-gastrulation.s3.eu-west-1.amazonaws.com/scrna_db_embflow.tar.gz
+wget https://tet-gastrulation.s3.eu-west-1.amazonaws.com/tet_data.tar.gz
+wget https://tet-gastrulation.s3.eu-west-1.amazonaws.com/scrna_db_tet.tar.gz
+wget https://tet-gastrulation.s3.eu-west-1.amazonaws.com/misha_db.tar.gz
+wget https://tet-gastrulation.s3.eu-west-1.amazonaws.com/methylation_data.tar.gz
+tar xvzf tet_umi_tables.tar.gz
+tar xvzf scrna_db_embflow.tar.gz
+tar xvzf tet_data.tar.gz
+tar xvzf scrna_db_tet.tar.gz
+tar xvzf misha_db.tar.gz
+tar xvzf methylation_data.tar.gz
 ```
 
 Change permissions for the analysis files:
@@ -73,12 +89,14 @@ Change permissions for the analysis files:
 chmod a+wx data/
 chmod a+r -R data/
 chmod a+rx -R db/
+mkdir output/
+mkdir figs/
 ```
 
 Run the container:
 
 ```bash
-docker run -v $(pwd)/db:/workdir/db -v $(pwd)/data:/workdir/data -ti -p 8888:8888 tanaylab/metabric-rrbs
+docker run -v $(pwd)/db:/workdir/db -v $(pwd)/data:/workdir/data -v $(pwd)/scrna_db:/workdir/scrna_db -v $(pwd)/output:/workdir/output -v $(pwd)/figs:/workdir/figs  -ti -p 8888:8888 tanaylab/tet-gastrulation
 ```
 
 Connect to the jupyter server running at port 8888.

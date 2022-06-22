@@ -1,0 +1,4 @@
+data/
+db/
+output/
+analysis_notebooks/.ipynb_checkpoints
