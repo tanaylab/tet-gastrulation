@@ -1,0 +1,82 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.4
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir353
+---
+
+```{r}
+setwd("../")
+```
+
+```{r}
+library("metacell")
+library("tgstat")
+library("tgconfig")
+library("Matrix")
+library("dplyr")
+```
+
+```{r}
+scdb_init("scrna_db/",force_reinit = T)
+```
+
+#### Remove extraembryonic ectoderm and parietal endoderm cells
+#### Merge cells with the wildtype atlas
+
+```{r}
+source("scripts/pipeline/remove_exe_ectoderm_and_parietal_endo_cls.R")
+source("scripts/pipeline/merge_umi_mat_with_wt10_umi_mat.R")
+
+for (mat_nm in c("dko12_chim","dko13_chim","dko23_chim")) {
+  
+  print(mat_nm)
+  mat = scdb_mat(mat_nm)
+  mat = remove_exe_ectoderm_and_parietal_endoderm(mat_query = mat)
+  mat_new = merge_umi_mat_with_wt10(scmat = mat)
+  scdb_add_mat(id = paste0(mat_nm,"_wt10"),mat = mat_new)
+  
+}
+```
+
+#### Generate single-cell balanced kNN-graph
+This step needs the file  
+_data/tet_tko.bad_genes.txt_
+
+```{r}
+source("scripts/pipeline/gen_cgraph.R")
+gen_cgraph("dko12_chim_wt10",force_recompute_cgraph = F)
+gen_cgraph("dko13_chim_wt10",force_recompute_cgraph = F)
+gen_cgraph("dko23_chim_wt10",force_recompute_cgraph = F)
+```
+
+#### Transfer cell type annotation to TKO cells
+
+```{r}
+source("scripts/pipeline/transfer_cell_type_annotation.R")
+transfer_color_chimera_tetraploid("dko12_chim_wt10")
+transfer_color_chimera_tetraploid("dko13_chim_wt10")
+transfer_color_chimera_tetraploid("dko23_chim_wt10")
+```
+
+#### Time chimera embryos based on their host and KO cells
+
+```{r}
+source("scripts/pipeline/transfer_time_annotation.R")
+source("scripts/pipeline/dko_chim_timing.R")
+dko_chim_timing("dko12_chim_wt10")
+dko_chim_timing("dko13_chim_wt10")
+dko_chim_timing("dko23_chim_wt10")
+```
+
+```{r}
+
+```

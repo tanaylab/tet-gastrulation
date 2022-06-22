@@ -1,0 +1,42 @@
+Package: tet.gastru
+Title: The intrinsic and extrinsic effects of Tet proteins during gastrulation
+Version: 0.1
+Authors@R: 
+    person("Aviezer", "Lifshitz", , "aviezer.lifshitz@weizmann.ac.il", role = c("aut", "cre"))
+Description: Functions for supporting analysis from the paper: "The intrinsic and extrinsic effects of Tet proteins during gastrulation", Cell 2022
+License: MIT
+Encoding: UTF-8
+Language: es
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.0
+Imports: 
+    dplyr,
+    cli,
+    ggplot2,
+    ggpubr,
+    ggrepel,
+    gridExtra,
+    grDevices,
+    here,
+    Matrix,    
+    misha,
+    misha.ext,
+    patchwork,
+    qlcMatrix,
+    qvalue,
+    glue,
+    slam,
+    sparsesvd,
+    tgppt,
+    tgstat,
+    tgutil,
+    tglkmeans,    
+    tidyr,
+    purrr,
+    zoo
+Remotes: 
+    tanaylab/misha,
+    tanaylab/misha.ext,
+    tanaylab/tgutil,    
+    tanaylab/tgppt
+    

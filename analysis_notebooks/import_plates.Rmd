@@ -1,0 +1,182 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.4
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir353
+---
+
+```{r}
+setwd("../")
+```
+
+```{r}
+library("metacell")
+library("Matrix")
+library("dplyr")
+```
+
+```{r}
+scdb_init("scrna_db/")
+```
+
+### Import Tet TKO chimera plates into metacell
+This notebook requires that the UMI tables for each plate are available in the folder **data/umi.tables** . If they are not available, please run the cell below to download the necessary data
+
+```{r}
+# If you need to download the umi tables, please run the two lines below
+if(0) {
+    source("../scripts/download_data.R")
+    download_umi_tables()
+}
+```
+
+```{r}
+source("scripts/pipeline/import_plates.R")
+```
+
+```{r}
+mat_nm = "tko_chim"
+  
+metadata = read.csv(file = "data/plate_metadata.csv",stringsAsFactors = F)
+genotype = "TKO"
+treatment = c("Chimera assay")
+metadata = metadata[metadata$treatment %in% treatment,]
+metadata = metadata[grep(pattern = genotype,x = metadata$genotype),]
+  
+# remove additionally the plate 190730_P03. No embryo and facs data available. Only relevant for TKO Chimera
+metadata = metadata[metadata$plate != "190730_P03",]
+  
+import_plates(mat_nm = mat_nm,metadata = metadata)
+
+```
+
+### Import Tet TKO tetraploid-complemented embryos
+
+```{r}
+mat_nm = "tko_tetra"
+  
+metadata = read.csv(file = "data/plate_metadata.csv",stringsAsFactors = F)
+genotype = "TKO"
+treatment = c("Tetraploid complementation assay")
+metadata = metadata[metadata$treatment %in% treatment,]
+metadata = metadata[grep(pattern = genotype,x = metadata$genotype),]
+  
+import_plates(mat_nm = mat_nm,metadata = metadata)
+
+```
+
+```{r}
+# There are four mixed plates containing both tetraploid-complemented control and Tet TKO embryos
+# We additionally ignore the cells from control embryos
+mat = scdb_mat("tko_tetra")
+
+ctrl_cells = mat@cell_metadata$cell[grep(pattern = "Ctrl",x = mat@cell_metadata$embryo)]
+
+mat = scm_ignore_cells(scmat = mat,ig_cells = union(mat@ignore_cells,ctrl_cells))
+
+scdb_add_mat(id = "tko_tetra",mat = mat)
+```
+
+### Import Control tetraploid-complemented embryos
+
+```{r}
+mat_nm = "control_tetra"
+  
+metadata = read.csv(file = "data/plate_metadata.csv",stringsAsFactors = F)
+genotype = "Control"
+treatment = c("Tetraploid complementation assay")
+metadata = metadata[metadata$treatment %in% treatment,]
+metadata = metadata[grep(pattern = genotype,x = metadata$genotype),]
+  
+import_plates(mat_nm = mat_nm,metadata = metadata)
+
+```
+
+```{r}
+# There are four mixed plates containing both tetraploid-complemented control and Tet TKO embryos
+# We additionally ignore the cells from TKO embryos
+mat = scdb_mat("control_tetra")
+
+tko_cells = mat@cell_metadata$cell[grep(pattern = "TKO",x = mat@cell_metadata$embryo)]
+length(tko_cells)
+
+mat = scm_ignore_cells(scmat = mat,ig_cells = union(mat@ignore_cells,tko_cells))
+
+scdb_add_mat(id = "control_tetra",mat = mat)
+```
+
+### Import Tet 1/2 DKO chimera embryos
+
+```{r}
+mat_nm = "dko12_chim"
+  
+metadata = read.csv(file = "data/plate_metadata.csv",stringsAsFactors = F)
+genotype = "Tet1/2 DKO"
+treatment = c("Chimera assay")
+metadata = metadata[metadata$treatment %in% treatment,]
+metadata = metadata[grep(pattern = genotype,x = metadata$genotype),]
+  
+import_plates(mat_nm = mat_nm,metadata = metadata)
+
+```
+
+### Import Tet 1/3 DKO chimera embryos
+
+```{r}
+mat_nm = "dko13_chim"
+  
+metadata = read.csv(file = "data/plate_metadata.csv",stringsAsFactors = F)
+genotype = "Tet1/3 DKO"
+treatment = c("Chimera assay")
+metadata = metadata[metadata$treatment %in% treatment,]
+metadata = metadata[grep(pattern = genotype,x = metadata$genotype),]
+  
+import_plates(mat_nm = mat_nm,metadata = metadata)
+
+```
+
+### Import Tet 2/3 DKO chimera embryos
+
+```{r}
+mat_nm = "dko23_chim"
+  
+metadata = read.csv(file = "data/plate_metadata.csv",stringsAsFactors = F)
+genotype = "Tet2/3 DKO"
+treatment = c("Chimera assay")
+metadata = metadata[metadata$treatment %in% treatment,]
+metadata = metadata[grep(pattern = genotype,x = metadata$genotype),]
+  
+import_plates(mat_nm = mat_nm,metadata = metadata)
+
+```
+
+### Import AAV-Cre delivered whole-embryo TKOs
+
+```{r}
+mat_nm = "tko_germline"
+  
+metadata = read.csv(file = "data/plate_metadata.csv",stringsAsFactors = F)
+genotype = "TKO"
+treatment = c("AAV Cre-delivered Tet1/2/3 triple KO")
+metadata = metadata[metadata$treatment %in% treatment,]
+metadata = metadata[grep(pattern = genotype,x = metadata$genotype),]
+  
+import_plates(mat_nm = mat_nm,metadata = metadata)
+
+```
+
+```{r}
+#### next step: gating of populations
+```
+
+```{r}
+
+```
