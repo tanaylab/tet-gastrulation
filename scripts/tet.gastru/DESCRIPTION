@@ -19,6 +19,7 @@ Imports:
     grDevices,
     here,
     Matrix,    
+    metacell,
     misha,
     misha.ext,
     patchwork,
@@ -37,6 +38,7 @@ Imports:
 Remotes: 
     tanaylab/misha,
     tanaylab/misha.ext,
+    tanaylab/metacell,
     tanaylab/tgutil,    
     tanaylab/tgppt
     
