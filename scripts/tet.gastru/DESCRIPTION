@@ -40,5 +40,6 @@ Remotes:
     tanaylab/misha.ext,
     tanaylab/metacell,
     tanaylab/tgutil,    
-    tanaylab/tgppt
+    tanaylab/tgppt,
+    bioc::release/qvalue
     

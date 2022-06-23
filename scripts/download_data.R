@@ -1,4 +1,5 @@
 # script for downloading and initializing the single-cell RNA-seq database for the metacell package
+options(timeout = 1e9)
 
 download_raw_umi_tables <- function() {
     download.file("https://tet-gastrulation.s3.eu-west-1.amazonaws.com/tet_umi_tables.tar.gz", "tet_umi_tables.tar.gz")
@@ -6,10 +7,6 @@ download_raw_umi_tables <- function() {
     system("tar -xzvf tet_umi_tables.tar.gz")
 
     file.remove("tet_umi_tables.tar.gz")
-
-
-
-    file.copy("umi_tables")
 }
 
 download_embflow_scrna_db <- function() {
