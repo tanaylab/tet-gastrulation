@@ -3,10 +3,7 @@
 download_raw_umi_tables <- function() {
     download.file("https://tet-gastrulation.s3.eu-west-1.amazonaws.com/tet_umi_tables.tar.gz", "tet_umi_tables.tar.gz")
 
-    if (!dir.exists("data")) {
-        dir.create("data")
-    }
-    system("tar -xzvf tet_umi_tables.tar.gz --directory data/")
+    system("tar -xzvf tet_umi_tables.tar.gz")
 
     file.remove("tet_umi_tables.tar.gz")
 
@@ -18,11 +15,7 @@ download_raw_umi_tables <- function() {
 download_embflow_scrna_db <- function() {
     download.file("https://tet-gastrulation.s3.eu-west-1.amazonaws.com/scrna_db_embflow.tar.gz", "scrna_db_embflow.tar.gz")
 
-    if (!dir.exists("scrna_db")) {
-        dir.create("scrna_db")
-    }
-
-    system("tar -xzvf scrna_db_embflow.tar.gz --directory scrna_db/")
+    system("tar -xzvf scrna_db_embflow.tar.gz")
 
     file.remove("scrna_db_embflow.tar.gz")
 }
@@ -30,11 +23,7 @@ download_embflow_scrna_db <- function() {
 download_tet_data <- function() {
     download.file("https://tet-gastrulation.s3.eu-west-1.amazonaws.com/tet_data.tar.gz", "tet_data.tar.gz")
 
-    if (!dir.exists("data")) {
-        dir.create("data")
-    }
-
-    system("tar -xzvf tet_data.tar.gz --directory data/")
+    system("tar -xzvf tet_data.tar.gz")
 
     file.remove("tet_data.tar.gz")
 }
@@ -46,7 +35,7 @@ download_tet_scrna_db <- function() {
         dir.create("scrna_db")
     }
 
-    system("tar -xzvf scrna_db_tet.tar.gz --directory scrna_db/")
+    system("tar -xzvf scrna_db_tet.tar.gz")
 
     file.remove("scrna_db_tet.tar.gz")
 }
@@ -67,13 +56,14 @@ download_methylation_files <- function() {
     file.remove("methylation_data.tar.gz")
 }
 
-download_minimal_data <- function() {
+download_minimal_scrna_data <- function() {
     download_raw_umi_tables()
     download_embflow_scrna_db()
 }
 
 download_full_data <- function() {
     download_tet_data()
+    download_raw_umi_tables()
     download_embflow_scrna_db()
     download_tet_scrna_db()
     download_misha_db()

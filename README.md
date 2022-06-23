@@ -15,10 +15,7 @@ source("scripts/download_data.R")
 download_full_data()
 ```
 
-This will download all the necessary data including processed metacell objects necessary for generating the figures. You can also download a minimal version ( `download_minimal_data()` ) in which case you would need to rerun all the notebooks prior to _generate-figures_ (see section *Notebook order* below.)
-
-See `files.md` for a description of all the downloaded files. TODO
-
+This will download all the necessary data including processed metacell objects necessary for generating the figures. You can also download a minimal version ( `download_minimal_scrna_data()` ) in which case you would need to rerun all the notebooks prior to _generate-figures_ (see section *Notebook order* below.)
 
 ## Necessary R packages
 
@@ -60,11 +57,7 @@ You should run the notebooks _import_plates_ and _gating_ first and _generate-fi
 8. Methylation
 9. generate-figures
 
-## Find a specific figure TODO
-
-`figures-key.md` lists where each figure in the paper was generated. 
-
-## Docker TODO
+## Docker
 
 We also provide a docker image which contains all the needed dependencies, to use it run:
 
