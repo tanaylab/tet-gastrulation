@@ -13,7 +13,10 @@ jupyter:
     name: ir353
 ---
 
-```{r, include=FALSE}
+# Generate figures and supplementary figures
+For methylation-related figures, see Methylation notebook
+
+```{r include=FALSE}
 knitr::opts_knit$set(root.dir = here::here())
 ```
 

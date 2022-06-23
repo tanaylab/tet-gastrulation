@@ -13,7 +13,9 @@ jupyter:
     name: ir353
 ---
 
-```{r, include=FALSE}
+# FACS gating of cell population
+
+```{r include=FALSE}
 knitr::opts_knit$set(root.dir = here::here())
 ```
 

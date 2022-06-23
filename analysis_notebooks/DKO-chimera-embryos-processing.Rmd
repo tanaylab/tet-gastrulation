@@ -13,7 +13,9 @@ jupyter:
     name: ir353
 ---
 
-```{r, include=FALSE}
+# DKO chimera processing
+
+```{r include=FALSE}
 knitr::opts_knit$set(root.dir = here::here())
 ```
 
