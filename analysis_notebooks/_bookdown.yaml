@@ -1,0 +1,14 @@
+rmd_files: 
+  - "index.Rmd"
+  - "import_plates.Rmd"
+  - "gating.Rmd"
+  - "TKO-chimera-embryos-processing.Rmd"
+  - "TKO-tetraploid-complemented-embryos-processing.Rmd"
+  - "Control-tetraploid-complemented-embryos-processing.Rmd"
+  - "DKO-chimera-embryos-processing.Rmd"
+  - "AAV_Cre-TKO-embryos-processing.Rmd"
+  - "Methylation.Rmd"
+  - "generate-figures.Rmd"
+
+new_session: yes
+

@@ -1,3 +1,753 @@
+--- 
+title: "The intrinsic and extrinsic effects of Tet proteins during gastrulation"
+author: "Markus Mittnenzweig & Aviezer Lifshitz"
+date: "`r Sys.Date()`"
+knit: "bookdown::render_book"
+site: bookdown::gitbook_site
+description: "Analysis and code for the paper: The intrinsic and extrinsic effects of Tet proteins during gastrulation"
+url: 'tanaylab.github.io/tet-gastrulation'
+github-repo: tanaylab/tet-gastrulation
+---
+
+Following is the code that generates the figures of our paper on TET function during gastrulation. The code is splitted to jupyter notebooks that can be found at: https://github.com/tanaylab/tet-gastrulation
+
+## Run the notebooks
+
+Prior to any analysis, after cloning the repository, please download first the necessary data by running (in the root directory of the cloned repository):
+
+
+```bash
+R -e "source('scripts/download_data.R'); download_full_data()"
+```
+
+This will download all the necessary data including processed metacell objects necessary for generating the figures. You can also download a minimal version ( `download_minimal_scrna_data()` ) in which case you would need to rerun all the notebooks prior to _generate-figures_ (see section *Notebook order* below.)
+
+## Necessary R packages
+
+You can install the necessary R packages by running:
+
+```r
+remotes::install_github("tanaylab/tet-gastrulation", subdir = "scripts/tet.gastru")
+```
+
+The initialization script (`scripts/init.R`) loads automatically the necessary R packages to run the notebooks. The analysis was done using R 4.0.5 and the following packages:
+
+- gridExtra 2.3
+- qvalue 2.22.0
+- ggrepel 0.9.1
+- ggpubr 0.4.0   
+- ggplot2 3.3.5
+- zoo 1.8-9
+- qlcMatrix 0.9.7
+- sparsesvd 0.2  
+- slam 0.1-49
+- tidyr 1.2.0
+- dplyr 1.0.9
+- tgutil 0.1.13  
+- tgstat 2.3.17
+- metacell 0.3.7
+- Matrix 1.3-4
+
+## Notebook order 
+
+You should run the notebooks _import_plates_ and _gating_ first and _generate-figures_ last.
+
+1. import_plates
+2. gating
+3. TKO-chimera-embryos-processing
+4. TKO-tetraploid-complemented-embryos-processing
+5. Control-tetraploid-complemented-embryos-processing
+6. DKO-chimera-embryos-processing
+7. AAV_Cre-TKO-embryos-processing
+8. Methylation
+9. generate-figures
+
+
+<!--chapter:end:index.Rmd-->
+
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.4
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir353
+---
+
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+```{r}
+setwd(here::here())
+```
+
+```{r}
+library("Matrix")
+library("dplyr")
+library("metacell")
+library("tgstat")
+```
+
+```{r}
+scdb_init("scrna_db", force_reinit = T)
+```
+
+```{r}
+mat <- scdb_mat("tko_germline")
+```
+
+```{r}
+# for compatibility with later scripts, change column name 'cell_genotype' to 'cell_type'
+md <- mat@cell_metadata
+
+if ("cell_genotype" %in% colnames(md)) {
+    md <- rename(md, cell_type = cell_genotype)
+}
+
+mat@cell_metadata <- md
+scdb_add_mat(id = "tko_germline", mat = mat)
+```
+
+#### Remove extraembryonic ectoderm and parietal endoderm cells
+#### Merge cells with the wildtype atlas
+
+```{r}
+source("scripts/pipeline/remove_exe_ectoderm_and_parietal_endo_cls.R")
+source("scripts/pipeline/merge_umi_mat_with_wt10_umi_mat.R")
+
+mat <- remove_exe_ectoderm_and_parietal_endoderm(mat_query = mat)
+mat_new <- merge_umi_mat_with_wt10(scmat = mat)
+scdb_add_mat(id = "tko_germline_wt10", mat = mat_new)
+```
+
+#### Generate single-cell balanced kNN-graph
+This step needs the file  
+_data/tet_tko.bad_genes.txt_
+
+```{r}
+# 4. generate cgraph
+source("scripts/pipeline/gen_cgraph.R")
+gen_cgraph(mat_nm = "tko_germline_wt10", force_recompute_cgraph = F)
+```
+
+#### Transfer cell type annotation to TKO cells
+
+```{r}
+source("scripts/pipeline/transfer_cell_type_annotation.R")
+transfer_color_chimera_tetraploid("tko_germline_wt10")
+```
+
+#### Time single embryos
+
+```{r}
+source("scripts/pipeline/transfer_time_annotation.R")
+source("scripts/pipeline/tko_germline_timing.R")
+tko_germline_timing("tko_germline_wt10")
+```
+
+```{r}
+
+```
+
+<!--chapter:end:AAV_Cre-TKO-embryos-processing.Rmd-->
+
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.4
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir353
+---
+
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+```{r}
+setwd(here::here())
+```
+
+```{r}
+library("metacell")
+library("tgstat")
+library("tgconfig")
+library("Matrix")
+library("dplyr")
+```
+
+```{r}
+scdb_init("scrna_db/", force_reinit = T)
+```
+
+```{r}
+mat1 <- scdb_mat("control_tetra")
+```
+
+#### Remove extraembryonic ectoderm and parietal endoderm cells
+
+```{r}
+source("scripts/pipeline/remove_exe_ectoderm_and_parietal_endo_cls.R")
+mat1 <- remove_exe_ectoderm_and_parietal_endoderm(mat_query = mat1)
+```
+
+#### Merge cells with the wildtype atlas
+We first merge this matrix with the tetraploid-complemented control embryos from Mittnenzweig, Mayshar et al. Cell (2021)
+
+```{r}
+source("scripts/pipeline/preprocessing_foxc_experiment_control_tetraploid_mat.R")
+preprocessing_tetraploid_control_mat_from_embflow_paper()
+```
+
+```{r}
+source("scripts/pipeline/merge_umi_mat_with_wt10_umi_mat.R")
+```
+
+```{r}
+source("scripts/pipeline/merge_umi_mat_with_wt10_umi_mat.R")
+mat2 <- scdb_mat("control_tetra_from_embflow_paper_f")
+
+mat_new <- merge_two_scmat(mat1 = mat1, mat2 = mat2)
+
+scdb_add_mat("control_tetra_all", mat = mat_new)
+```
+
+Next merge matrix with WT cells
+
+```{r}
+mat_new <- scdb_mat("control_tetra_all")
+mat_new <- merge_umi_mat_with_wt10(scmat = mat_new)
+scdb_add_mat(id = "control_tetra_all_wt10", mat = mat_new)
+```
+
+#### Generate single-cell balanced kNN-graph
+This step needs the file  
+_data/tet_tko.bad_genes.txt_
+
+```{r}
+source("scripts/pipeline/gen_cgraph.R")
+gen_cgraph(mat_nm = "control_tetra_all", force_recompute_cgraph = F)
+gen_cgraph(mat_nm = "control_tetra_all_wt10", force_recompute_cgraph = F)
+```
+
+#### Transfer cell type annotation to chimera cells
+
+```{r}
+source("scripts/pipeline/transfer_cell_type_annotation.R")
+transfer_color_chimera_tetraploid(mat_nm = "control_tetra_all_wt10")
+```
+
+#### Time tetraploid-complemented embryos based on their injected control cells
+
+```{r}
+source("scripts/pipeline/transfer_time_annotation.R")
+source("scripts/pipeline/tetraploid_timing.R")
+tetra_timing("control_tetra_all_wt10")
+```
+
+#### Export infered time and cell type into table
+
+```{r}
+source("scripts/pipeline/create_metadata.R")
+create_control_tetraploid_metadata()
+```
+
+```{r}
+
+```
+
+<!--chapter:end:Control-tetraploid-complemented-embryos-processing.Rmd-->
+
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.4
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir353
+---
+
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+```{r}
+setwd(here::here())
+```
+
+```{r}
+library("metacell")
+library("tgstat")
+library("tgconfig")
+library("Matrix")
+library("dplyr")
+```
+
+```{r}
+scdb_init("scrna_db/", force_reinit = T)
+```
+
+#### Remove extraembryonic ectoderm and parietal endoderm cells
+#### Merge cells with the wildtype atlas
+
+```{r}
+source("scripts/pipeline/remove_exe_ectoderm_and_parietal_endo_cls.R")
+source("scripts/pipeline/merge_umi_mat_with_wt10_umi_mat.R")
+
+for (mat_nm in c("dko12_chim", "dko13_chim", "dko23_chim")) {
+    print(mat_nm)
+    mat <- scdb_mat(mat_nm)
+    mat <- remove_exe_ectoderm_and_parietal_endoderm(mat_query = mat)
+    mat_new <- merge_umi_mat_with_wt10(scmat = mat)
+    scdb_add_mat(id = paste0(mat_nm, "_wt10"), mat = mat_new)
+}
+```
+
+#### Generate single-cell balanced kNN-graph
+This step needs the file  
+_data/tet_tko.bad_genes.txt_
+
+```{r}
+source("scripts/pipeline/gen_cgraph.R")
+gen_cgraph("dko12_chim_wt10", force_recompute_cgraph = F)
+gen_cgraph("dko13_chim_wt10", force_recompute_cgraph = F)
+gen_cgraph("dko23_chim_wt10", force_recompute_cgraph = F)
+```
+
+#### Transfer cell type annotation to TKO cells
+
+```{r}
+source("scripts/pipeline/transfer_cell_type_annotation.R")
+transfer_color_chimera_tetraploid("dko12_chim_wt10")
+transfer_color_chimera_tetraploid("dko13_chim_wt10")
+transfer_color_chimera_tetraploid("dko23_chim_wt10")
+```
+
+#### Time chimera embryos based on their host and KO cells
+
+```{r}
+source("scripts/pipeline/transfer_time_annotation.R")
+source("scripts/pipeline/dko_chim_timing.R")
+dko_chim_timing("dko12_chim_wt10")
+dko_chim_timing("dko13_chim_wt10")
+dko_chim_timing("dko23_chim_wt10")
+```
+
+```{r}
+
+```
+
+<!--chapter:end:DKO-chimera-embryos-processing.Rmd-->
+
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.4
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir353
+---
+
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+```{r}
+setwd(here::here())
+```
+
+```{r}
+library("metacell")
+library("tgstat")
+library("Matrix")
+library("dplyr")
+```
+
+```{r}
+source("scripts/pipeline/proj_on_wt9_atlas.R")
+source("scripts/pipeline/add_clone_information_to_scmat_metadata.R")
+```
+
+```{r}
+scfigs_init("figs")
+scdb_init("scrna_db/", force_reinit = TRUE)
+```
+
+#### Tet TKO chimera embryos
+
+```{r}
+source("scripts/gating/tko_chim_gating.R")
+```
+
+#### Tet TKO tetraploid embryos
+
+```{r}
+source("scripts/gating/tko_tetra_gating.R")
+```
+
+####  Control tetraploid embryos
+
+```{r}
+source("scripts/gating/control_tetra_gating.R")
+```
+
+####  Tet 1/2 DKO chimera embryos
+
+```{r}
+source("scripts/gating/dko12_chim_gating.R")
+dko12_gating()
+```
+
+####  Tet 1/3 DKO chimera embryos
+
+```{r}
+source("scripts/gating/dko13_chim_gating.R")
+dko13_gating()
+```
+
+####  Tet 2/3 DKO chimera embryos
+
+```{r}
+source("scripts/gating/dko23_chim_gating.R")
+dko23_gating()
+```
+
+```{r}
+
+```
+
+<!--chapter:end:gating.Rmd-->
+
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.4
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir353
+---
+
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+```{r}
+## The working directory should be the root of the cloned repository with scrna_db, figs, data as subfolders
+setwd(here::here())
+```
+
+```{r}
+library("dplyr")
+library("zoo")
+library("metacell")
+library("tgstat")
+library("ggpubr")
+library("qvalue")
+library("gridExtra")
+library("Matrix")
+library("tidyr")
+library("ggplot2")
+library("ggrepel")
+```
+
+```{r}
+scdb_init("scrna_db/", force_reinit = T)
+```
+
+```{r}
+source("scripts/pipeline/atlas_proj_wt10.R")
+source("scripts/pipeline/transfer_time_annotation.R")
+```
+
+#### Generate Figure 1
+
+```{r}
+source("scripts/paper_figures/fig1.R")
+generate_figure1_plots()
+```
+
+#### Generate Figure 2
+
+```{r}
+source("scripts/paper_figures/fig2.R")
+generate_figure2_plots()
+```
+
+#### Generate Figure 3
+
+```{r}
+source("scripts/paper_figures/fig3.R")
+generate_figure3_plots()
+```
+
+#### Generate Figure 4
+
+```{r}
+source("scripts/paper_figures/fig4.R")
+generate_figure4_plots()
+```
+
+#### Generate Figure 6
+
+```{r}
+source("scripts/paper_figures/fig6.R")
+generate_figure6_plots()
+```
+
+#### Generate Figure S2
+
+```{r}
+source("scripts/paper_figures/fig_s2.R")
+generate_figure_s2_plots()
+```
+
+#### Generate Figure S3
+
+```{r}
+source("scripts/paper_figures/fig_s3.R")
+generate_figure_s3_plots()
+```
+
+#### Generate Figure S4
+
+```{r}
+source("scripts/paper_figures/fig_s4.R")
+generate_figure_s4_plots()
+```
+
+#### Generate Figure S5
+
+```{r}
+source("scripts/paper_figures/fig_s5.R")
+generate_figure_s5_plots()
+```
+
+#### Generate Figure S6
+
+```{r}
+source("scripts/paper_figures/fig_s6.R")
+generate_figure_s6_plots()
+```
+
+```{r}
+
+```
+
+<!--chapter:end:generate-figures.Rmd-->
+
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.4
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir353
+---
+
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+```{r}
+setwd(here::here())
+```
+
+```{r}
+library("metacell")
+library("Matrix")
+library("dplyr")
+```
+
+```{r}
+scdb_init("scrna_db/", force_reinit = TRUE)
+```
+
+### Import Tet TKO chimera plates into metacell
+This notebook requires that the UMI tables for each plate are available in the folder **data/umi.tables** . If they are not available, please run the cell below to download the necessary data
+
+```{r}
+# If you need to download the umi tables, please run the two lines below
+if (0) {
+    source("../scripts/download_data.R")
+    download_umi_tables()
+}
+```
+
+```{r}
+source("scripts/pipeline/import_plates.R")
+```
+
+```{r}
+mat_nm <- "tko_chim"
+
+metadata <- read.csv(file = "data/plate_metadata.csv", stringsAsFactors = F)
+genotype <- "TKO"
+treatment <- c("Chimera assay")
+metadata <- metadata[metadata$treatment %in% treatment, ]
+metadata <- metadata[grep(pattern = genotype, x = metadata$genotype), ]
+
+# remove additionally the plate 190730_P03. No embryo and facs data available. Only relevant for TKO Chimera
+metadata <- metadata[metadata$plate != "190730_P03", ]
+
+import_plates(mat_nm = mat_nm, metadata = metadata)
+```
+
+### Import Tet TKO tetraploid-complemented embryos
+
+```{r}
+mat_nm <- "tko_tetra"
+
+metadata <- read.csv(file = "data/plate_metadata.csv", stringsAsFactors = F)
+genotype <- "TKO"
+treatment <- c("Tetraploid complementation assay")
+metadata <- metadata[metadata$treatment %in% treatment, ]
+metadata <- metadata[grep(pattern = genotype, x = metadata$genotype), ]
+
+import_plates(mat_nm = mat_nm, metadata = metadata)
+```
+
+```{r}
+# There are four mixed plates containing both tetraploid-complemented control and Tet TKO embryos
+# We additionally ignore the cells from control embryos
+mat <- scdb_mat("tko_tetra")
+
+ctrl_cells <- mat@cell_metadata$cell[grep(pattern = "Ctrl", x = mat@cell_metadata$embryo)]
+
+mat <- scm_ignore_cells(scmat = mat, ig_cells = union(mat@ignore_cells, ctrl_cells))
+
+scdb_add_mat(id = "tko_tetra", mat = mat)
+```
+
+### Import Control tetraploid-complemented embryos
+
+```{r}
+mat_nm <- "control_tetra"
+
+metadata <- read.csv(file = "data/plate_metadata.csv", stringsAsFactors = F)
+genotype <- "Control"
+treatment <- c("Tetraploid complementation assay")
+metadata <- metadata[metadata$treatment %in% treatment, ]
+metadata <- metadata[grep(pattern = genotype, x = metadata$genotype), ]
+
+import_plates(mat_nm = mat_nm, metadata = metadata)
+```
+
+```{r}
+# There are four mixed plates containing both tetraploid-complemented control and Tet TKO embryos
+# We additionally ignore the cells from TKO embryos
+mat <- scdb_mat("control_tetra")
+
+tko_cells <- mat@cell_metadata$cell[grep(pattern = "TKO", x = mat@cell_metadata$embryo)]
+length(tko_cells)
+
+mat <- scm_ignore_cells(scmat = mat, ig_cells = union(mat@ignore_cells, tko_cells))
+
+scdb_add_mat(id = "control_tetra", mat = mat)
+```
+
+### Import Tet 1/2 DKO chimera embryos
+
+```{r}
+mat_nm <- "dko12_chim"
+
+metadata <- read.csv(file = "data/plate_metadata.csv", stringsAsFactors = F)
+genotype <- "Tet1/2 DKO"
+treatment <- c("Chimera assay")
+metadata <- metadata[metadata$treatment %in% treatment, ]
+metadata <- metadata[grep(pattern = genotype, x = metadata$genotype), ]
+
+import_plates(mat_nm = mat_nm, metadata = metadata)
+```
+
+### Import Tet 1/3 DKO chimera embryos
+
+```{r}
+mat_nm <- "dko13_chim"
+
+metadata <- read.csv(file = "data/plate_metadata.csv", stringsAsFactors = F)
+genotype <- "Tet1/3 DKO"
+treatment <- c("Chimera assay")
+metadata <- metadata[metadata$treatment %in% treatment, ]
+metadata <- metadata[grep(pattern = genotype, x = metadata$genotype), ]
+
+import_plates(mat_nm = mat_nm, metadata = metadata)
+```
+
+### Import Tet 2/3 DKO chimera embryos
+
+```{r}
+mat_nm <- "dko23_chim"
+
+metadata <- read.csv(file = "data/plate_metadata.csv", stringsAsFactors = F)
+genotype <- "Tet2/3 DKO"
+treatment <- c("Chimera assay")
+metadata <- metadata[metadata$treatment %in% treatment, ]
+metadata <- metadata[grep(pattern = genotype, x = metadata$genotype), ]
+
+import_plates(mat_nm = mat_nm, metadata = metadata)
+```
+
+### Import AAV-Cre delivered whole-embryo TKOs
+
+```{r}
+mat_nm <- "tko_germline"
+
+metadata <- read.csv(file = "data/plate_metadata.csv", stringsAsFactors = F)
+genotype <- "TKO"
+treatment <- c("AAV Cre-delivered Tet1/2/3 triple KO")
+metadata <- metadata[metadata$treatment %in% treatment, ]
+metadata <- metadata[grep(pattern = genotype, x = metadata$genotype), ]
+
+import_plates(mat_nm = mat_nm, metadata = metadata)
+```
+
+```{r}
+#### next step: gating of populations
+```
+
+```{r}
+
+```
+
+<!--chapter:end:import_plates.Rmd-->
+
 ---
 jupyter:
   jupytext:
@@ -1031,3 +1781,286 @@ p_motifs_boxp <- motifs_df_thresh %>%
     facet_grid(. ~ motif)
 p_motifs_boxp
 ```
+
+<!--chapter:end:Methylation.Rmd-->
+
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.4
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir353
+---
+
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+```{r}
+setwd(here::here())
+```
+
+```{r}
+library("metacell")
+library("tgstat")
+library("tgconfig")
+library("Matrix")
+library("dplyr")
+```
+
+```{r}
+scdb_init("scrna_db/", force_reinit = T)
+```
+
+```{r}
+mat <- scdb_mat("tko_chim")
+```
+
+#### Remove cells belonging to E8.5 chimera embryos. Only use chimera embryos from E7.5
+
+```{r}
+e85_embryos <- paste0("TKO29_", c(13:19))
+ig_cells <- colnames(mat@mat)[mat@cell_metadata[colnames(mat@mat), "embryo"] %in% e85_embryos]
+ig_cells <- c(mat@ignore_cells, ig_cells)
+
+mat <- scm_ignore_cells(scmat = mat, ig_cells = ig_cells)
+```
+
+#### Remove extraembryonic ectoderm and parietal endoderm cells
+
+```{r}
+source("scripts/pipeline/remove_exe_ectoderm_and_parietal_endo_cls.R")
+mat <- remove_exe_ectoderm_and_parietal_endoderm(mat_query = mat)
+scdb_add_mat(id = "tko_chim", mat = mat)
+```
+
+#### Merge cells with the wildtype atlas
+
+```{r}
+source("scripts/pipeline/merge_umi_mat_with_wt10_umi_mat.R")
+mat_new <- merge_umi_mat_with_wt10(scmat = mat)
+scdb_add_mat(id = "tko_chim_wt10", mat = mat_new)
+```
+
+#### Generate single-cell balanced kNN-graph
+This step needs the file  
+_data/tet_tko.bad_genes.txt_
+
+```{r}
+source("scripts/pipeline/gen_cgraph.R")
+gen_cgraph(mat_nm = "tko_chim_wt10", force_recompute_cgraph = F)
+```
+
+#### Transfer cell type annotation to chimera cells
+
+```{r}
+source("scripts/pipeline/transfer_cell_type_annotation.R")
+transfer_color_chimera_tetraploid(mat_nm = "tko_chim_wt10")
+```
+
+#### Time chimera embryos based on their host and KO cells
+
+```{r}
+source("scripts/pipeline/tko_chim_timing.R")
+source("scripts/pipeline/transfer_time_annotation.R")
+tko_chim_timing()
+# tko_chimera_plot_cor_time_dist_per_emb(mat_nm = "tko_chim_wt10")
+```
+
+#### Export infered time and cell type into table
+
+```{r}
+source("scripts/pipeline/create_metadata.R")
+create_tko_chimera_metadata()
+```
+
+#### Generate a separate UMI matrix and metacell object for the TKO cells
+
+```{r}
+source("scripts/pipeline/generat_ko_mat.R")
+generate_ko_mat_chimera()
+```
+
+```{r}
+source("scripts/pipeline/generic_mc.R")
+tgconfig::override_params(config_file = "config/tet_chim.yaml", package = "metacell")
+
+bad_genes <- read.table("data/tet_tko.bad_genes.txt", sep = "\t", stringsAsFactors = F)
+bad_genes <- bad_genes[, 1]
+
+mat_nm <- "tko_chim_ko"
+
+generate_mc(name = mat_nm, add_bad_genes = bad_genes)
+```
+
+```{r}
+wt_atlas <- mcell_gen_atlas(
+    mat_id = "sing_emb_wt10",
+    mc_id = "sing_emb_wt10_recolored",
+    gset_id = "sing_emb_wt10",
+    mc2d_id = "sing_emb_wt10_recolored"
+)
+
+cmp <- mcell_proj_on_atlas(
+    mat_id = "tko_chim_ko",
+    mc_id = "tko_chim_ko",
+    atlas = wt_atlas,
+    fig_cmp_dir = paste0("figs/atlas_projection_", "tko_chim_ko"), recolor_mc_id = "tko_chim_ko", ten2mars = F
+)
+```
+
+```{r}
+tgconfig::set_param(param = "mcell_mc2d_T_edge", value = 0.03, package = "metacell")
+mcell_mc2d_force_knn(mc2d_id = "tko_chim_ko", mc_id = "tko_chim_ko", graph_id = "tko_chim_ko", graph_parametric = T, feats_gset = "tko_chim_ko")
+mcell_mc2d_plot("tko_chim_ko")
+```
+
+```{r}
+
+```
+
+<!--chapter:end:TKO-chimera-embryos-processing.Rmd-->
+
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.4
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir353
+---
+
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+```{r}
+setwd(here::here())
+```
+
+```{r}
+library("metacell")
+library("tgstat")
+library("tgconfig")
+library("Matrix")
+library("dplyr")
+```
+
+```{r}
+scdb_init("scrna_db/", force_reinit = T)
+```
+
+```{r}
+mat <- scdb_mat("tko_tetra")
+```
+
+#### Remove extraembryonic ectoderm and parietal endoderm cells
+
+```{r}
+source("scripts/pipeline/remove_exe_ectoderm_and_parietal_endo_cls.R")
+mat <- remove_exe_ectoderm_and_parietal_endoderm(mat_query = mat)
+```
+
+#### Merge cells with the wildtype atlas
+
+```{r}
+source("scripts/pipeline/merge_umi_mat_with_wt10_umi_mat.R")
+mat_new <- merge_umi_mat_with_wt10(scmat = mat)
+scdb_add_mat(id = "tko_tetra_wt10", mat = mat_new)
+```
+
+#### Generate single-cell balanced kNN-graph
+This step needs the file  
+_data/tet_tko.bad_genes.txt_
+
+```{r}
+source("scripts/pipeline/gen_cgraph.R")
+gen_cgraph(mat_nm = "tko_tetra_wt10", force_recompute_cgraph = F)
+```
+
+#### Transfer cell type annotation to TKO cells
+
+```{r}
+source("scripts/pipeline/transfer_cell_type_annotation.R")
+transfer_color_chimera_tetraploid(mat_nm = "tko_tetra_wt10")
+```
+
+#### Time tetraploid-complemented embryos based on their injected TKO cells
+
+```{r}
+source("scripts/pipeline/transfer_time_annotation.R")
+source("scripts/pipeline/tetraploid_timing.R")
+tetra_timing("tko_tetra_wt10")
+```
+
+#### Export infered time and cell type into table
+
+```{r}
+source("scripts/pipeline/create_metadata.R")
+create_tko_tetraploid_metadata()
+```
+
+#### Generate a separate UMI matrix and metacell object for the TKO cells
+
+```{r}
+source("scripts/pipeline/generat_ko_mat.R")
+generate_ko_mat_tetraploid()
+```
+
+```{r}
+source("scripts/pipeline/generic_mc.R")
+tgconfig::override_params(config_file = "config/tet_chim.yaml", package = "metacell")
+
+bad_genes <- read.table("data/tet_tko.bad_genes.txt", sep = "\t", stringsAsFactors = F)
+bad_genes <- bad_genes[, 1]
+
+mat_nm <- "tko_tetra_ko"
+
+generate_mc(mat_nm, add_bad_genes = bad_genes)
+```
+
+```{r}
+wt_atlas <- mcell_gen_atlas(
+    mat_id = "sing_emb_wt10",
+    mc_id = "sing_emb_wt10_recolored",
+    gset_id = "sing_emb_wt10",
+    mc2d_id = "sing_emb_wt10_recolored"
+)
+
+cmp <- mcell_proj_on_atlas(
+    mat_id = "tko_tetra_ko",
+    mc_id = "tko_tetra_ko",
+    atlas = wt_atlas,
+    fig_cmp_dir = paste0("figs/atlas_projection_", "tko_tetra_ko"), recolor_mc_id = "tko_tetra_ko", ten2mars = F
+)
+```
+
+```{r}
+tgconfig::set_param(param = "mcell_mc2d_T_edge", value = 0.03, package = "metacell")
+mcell_mc2d_force_knn(mc2d_id = "tko_tetra_ko", mc_id = "tko_tetra_ko", graph_id = "tko_tetra_ko", graph_parametric = T, feats_gset = "tko_tetra_ko")
+mcell_mc2d_plot("tko_tetra_ko")
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+<!--chapter:end:TKO-tetraploid-complemented-embryos-processing.Rmd-->
+

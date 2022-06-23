@@ -13,8 +13,12 @@ jupyter:
     name: ir353
 ---
 
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+```
+
 ```{r}
-setwd("../")
+setwd(here::here())
 ```
 
 ```{r}
@@ -31,7 +35,7 @@ source("scripts/pipeline/add_clone_information_to_scmat_metadata.R")
 
 ```{r}
 scfigs_init("figs")
-scdb_init("scrna_db/")
+scdb_init("scrna_db/", force_reinit = TRUE)
 ```
 
 #### Tet TKO chimera embryos

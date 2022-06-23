@@ -13,9 +13,13 @@ jupyter:
     name: ir353
 ---
 
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+```
+
 ```{r}
 ## The working directory should be the root of the cloned repository with scrna_db, figs, data as subfolders
-setwd("../")
+setwd(here::here())
 ```
 
 ```{r}
@@ -30,11 +34,10 @@ library("Matrix")
 library("tidyr")
 library("ggplot2")
 library("ggrepel")
-
 ```
 
 ```{r}
-scdb_init("scrna_db/",force_reinit = T)
+scdb_init("scrna_db/", force_reinit = T)
 ```
 
 ```{r}

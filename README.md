@@ -71,8 +71,12 @@ Change permissions for the analysis files:
 
 ```bash
 chmod a+wx data/
-chmod a+r -R data/
+chmod a+rw -R data/
 chmod a+rx -R db/
+chmod a+rx scrna_db/
+chmod a+rw -R scrna_db/
+chmod a+w figs/
+chmod a+w output/
 ```
 
 Run the container:

@@ -13,8 +13,12 @@ jupyter:
     name: ir353
 ---
 
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+```
+
 ```{r}
-setwd("../")
+setwd(here::here())
 ```
 
 ```{r}
@@ -26,7 +30,7 @@ library("dplyr")
 ```
 
 ```{r}
-scdb_init("scrna_db/",force_reinit = T)
+scdb_init("scrna_db/", force_reinit = T)
 ```
 
 #### Remove extraembryonic ectoderm and parietal endoderm cells
@@ -36,14 +40,12 @@ scdb_init("scrna_db/",force_reinit = T)
 source("scripts/pipeline/remove_exe_ectoderm_and_parietal_endo_cls.R")
 source("scripts/pipeline/merge_umi_mat_with_wt10_umi_mat.R")
 
-for (mat_nm in c("dko12_chim","dko13_chim","dko23_chim")) {
-  
-  print(mat_nm)
-  mat = scdb_mat(mat_nm)
-  mat = remove_exe_ectoderm_and_parietal_endoderm(mat_query = mat)
-  mat_new = merge_umi_mat_with_wt10(scmat = mat)
-  scdb_add_mat(id = paste0(mat_nm,"_wt10"),mat = mat_new)
-  
+for (mat_nm in c("dko12_chim", "dko13_chim", "dko23_chim")) {
+    print(mat_nm)
+    mat <- scdb_mat(mat_nm)
+    mat <- remove_exe_ectoderm_and_parietal_endoderm(mat_query = mat)
+    mat_new <- merge_umi_mat_with_wt10(scmat = mat)
+    scdb_add_mat(id = paste0(mat_nm, "_wt10"), mat = mat_new)
 }
 ```
 
@@ -53,9 +55,9 @@ _data/tet_tko.bad_genes.txt_
 
 ```{r}
 source("scripts/pipeline/gen_cgraph.R")
-gen_cgraph("dko12_chim_wt10",force_recompute_cgraph = F)
-gen_cgraph("dko13_chim_wt10",force_recompute_cgraph = F)
-gen_cgraph("dko23_chim_wt10",force_recompute_cgraph = F)
+gen_cgraph("dko12_chim_wt10", force_recompute_cgraph = F)
+gen_cgraph("dko13_chim_wt10", force_recompute_cgraph = F)
+gen_cgraph("dko23_chim_wt10", force_recompute_cgraph = F)
 ```
 
 #### Transfer cell type annotation to TKO cells

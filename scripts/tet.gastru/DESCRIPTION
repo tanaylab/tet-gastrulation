@@ -34,6 +34,7 @@ Imports:
     tglkmeans,    
     tidyr,
     purrr,
+    writexl,
     zoo
 Remotes: 
     tanaylab/misha,
