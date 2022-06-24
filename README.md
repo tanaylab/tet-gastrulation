@@ -2,6 +2,7 @@
 # The intrinsic and extrinsic effects of Tet proteins during gastrulation
 
 <!-- badges: start -->
+[![DOI](https://zenodo.org/badge/500408241.svg)](https://zenodo.org/badge/latestdoi/500408241)
 <!-- badges: end -->
 
 This is accompanying code that generates the figures of our paper on TET function during gastrulation. The code is splitted into jupyter notebooks that can be found in the analysis folder.
