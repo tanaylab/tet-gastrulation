@@ -1,4 +1,10 @@
 data/
 db/
 output/
+scrna_db/
+figs/
 analysis_notebooks/.ipynb_checkpoints
+analysis_notebooks/_book
+analysis_notebooks/generate-figures_files/
+analysis_notebooks/Methylation_files/
+analysis_notebooks/_main.rds
