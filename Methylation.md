@@ -38,7 +38,7 @@ init()
 ```
 
 ```
-## here() starts at /net/mraid14/export/tgdata/users/aviezerl/proj/tetchim/tet-gastrulation
+## here() starts at /net/mraid14/export/tgdata/users/aviezerl/temp/test_tet_gastru/tet-gastrulation
 ```
 
 ## Define genomic contexts

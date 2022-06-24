@@ -13,6 +13,8 @@ jupyter:
     name: ir353
 ---
 
+# TKO chimera processing
+
 
 
 
@@ -170,22 +172,21 @@ generate_mc(name = mat_nm, add_bad_genes = bad_genes)
 
 
 ```r
-wt_atlas <- mcell_gen_atlas(
-    mat_id = "sing_emb_wt10",
-    mc_id = "sing_emb_wt10_recolored",
-    gset_id = "sing_emb_wt10",
-    mc2d_id = "sing_emb_wt10_recolored"
-)
-```
+# Run the line below if you want to transfer cell type annotation from the WT atlas to the tko_chim_ko metacell object
 
+# wt_atlas <- mcell_gen_atlas(
+#     mat_id = "sing_emb_wt10",
+#     mc_id = "sing_emb_wt10_recolored",
+#     gset_id = "sing_emb_wt10",
+#     mc2d_id = "sing_emb_wt10_recolored"
+# )
 
-```r
-cmp <- mcell_proj_on_atlas(
-    mat_id = "tko_chim_ko",
-    mc_id = "tko_chim_ko",
-    atlas = wt_atlas,
-    fig_cmp_dir = paste0("figs/atlas_projection_", "tko_chim_ko"), recolor_mc_id = "tko_chim_ko", ten2mars = F
-)
+# cmp <- mcell_proj_on_atlas(
+#     mat_id = "tko_chim_ko",
+#     mc_id = "tko_chim_ko",
+#     atlas = wt_atlas,
+#     fig_cmp_dir = paste0("figs/atlas_projection_", "tko_chim_ko"), recolor_mc_id = "tko_chim_ko", ten2mars = F
+# )
 ```
 
 

@@ -1,13 +1,15 @@
 --- 
 title: "The intrinsic and extrinsic effects of Tet proteins during gastrulation"
 author: "Markus Mittnenzweig & Aviezer Lifshitz"
-date: "2022-06-23"
+date: "2022-06-24"
 knit: "bookdown::render_book"
 site: bookdown::gitbook_site
 description: "Analysis and code for the paper: The intrinsic and extrinsic effects of Tet proteins during gastrulation"
 url: 'tanaylab.github.io/tet-gastrulation'
 github-repo: tanaylab/tet-gastrulation
 ---
+
+# The intrinsic and extrinsic effects of Tet proteins during gastrulation
 
 Following is the code that generates the figures of our paper on TET function during gastrulation. The code is splitted to jupyter notebooks that can be found at: https://github.com/tanaylab/tet-gastrulation
 

@@ -13,6 +13,9 @@ jupyter:
     name: ir353
 ---
 
+# Processing of whole-embryo Tet TKO embryos 
+(AAV/Cre-delivered to Tet triple floxed zygotes)
+
 
 
 

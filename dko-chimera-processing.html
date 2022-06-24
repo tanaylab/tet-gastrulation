@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>7 DKO chimera processing | The intrinsic and extrinsic effects of Tet proteins during gastrulation</title>
+  <meta name="description" content="Analysis and code for the paper: The intrinsic and extrinsic effects of Tet proteins during gastrulation" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="7 DKO chimera processing | The intrinsic and extrinsic effects of Tet proteins during gastrulation" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Analysis and code for the paper: The intrinsic and extrinsic effects of Tet proteins during gastrulation" />
+  <meta name="github-repo" content="tanaylab/tet-gastrulation" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="7 DKO chimera processing | The intrinsic and extrinsic effects of Tet proteins during gastrulation" />
+  
+  <meta name="twitter:description" content="Analysis and code for the paper: The intrinsic and extrinsic effects of Tet proteins during gastrulation" />
+  
+
+<meta name="author" content="Markus Mittnenzweig &amp; Aviezer Lifshitz" />
+
+
+<meta name="date" content="2022-06-24" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="processing-of-tetraploid-complemented-control-embryos.html"/>
+<link rel="next" href="processing-of-whole-embryo-tet-tko-embryos.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> The intrinsic and extrinsic effects of Tet proteins during gastrulation</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#run-the-notebooks"><i class="fa fa-check"></i><b>1.1</b> Run the notebooks</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#necessary-r-packages"><i class="fa fa-check"></i><b>1.2</b> Necessary R packages</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#notebook-order"><i class="fa fa-check"></i><b>1.3</b> Notebook order</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="import-scrna-seq-plates.html"><a href="import-scrna-seq-plates.html"><i class="fa fa-check"></i><b>2</b> Import scRNA-seq plates</a><ul>
+<li class="chapter" data-level="2.0.1" data-path="import-scrna-seq-plates.html"><a href="import-scrna-seq-plates.html#import-tet-tko-chimera-plates-into-metacell"><i class="fa fa-check"></i><b>2.0.1</b> Import Tet TKO chimera plates into metacell</a></li>
+<li class="chapter" data-level="2.0.2" data-path="import-scrna-seq-plates.html"><a href="import-scrna-seq-plates.html#import-tet-tko-tetraploid-complemented-embryos"><i class="fa fa-check"></i><b>2.0.2</b> Import Tet TKO tetraploid-complemented embryos</a></li>
+<li class="chapter" data-level="2.0.3" data-path="import-scrna-seq-plates.html"><a href="import-scrna-seq-plates.html#import-control-tetraploid-complemented-embryos"><i class="fa fa-check"></i><b>2.0.3</b> Import Control tetraploid-complemented embryos</a></li>
+<li class="chapter" data-level="2.0.4" data-path="import-scrna-seq-plates.html"><a href="import-scrna-seq-plates.html#import-tet-12-dko-chimera-embryos"><i class="fa fa-check"></i><b>2.0.4</b> Import Tet 1/2 DKO chimera embryos</a></li>
+<li class="chapter" data-level="2.0.5" data-path="import-scrna-seq-plates.html"><a href="import-scrna-seq-plates.html#import-tet-13-dko-chimera-embryos"><i class="fa fa-check"></i><b>2.0.5</b> Import Tet 1/3 DKO chimera embryos</a></li>
+<li class="chapter" data-level="2.0.6" data-path="import-scrna-seq-plates.html"><a href="import-scrna-seq-plates.html#import-tet-23-dko-chimera-embryos"><i class="fa fa-check"></i><b>2.0.6</b> Import Tet 2/3 DKO chimera embryos</a></li>
+<li class="chapter" data-level="2.0.7" data-path="import-scrna-seq-plates.html"><a href="import-scrna-seq-plates.html#import-aav-cre-delivered-whole-embryo-tkos"><i class="fa fa-check"></i><b>2.0.7</b> Import AAV-Cre delivered whole-embryo TKOs</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="facs-gating-of-cell-population.html"><a href="facs-gating-of-cell-population.html"><i class="fa fa-check"></i><b>3</b> FACS gating of cell population</a></li>
+<li class="chapter" data-level="4" data-path="tko-chimera-processing.html"><a href="tko-chimera-processing.html"><i class="fa fa-check"></i><b>4</b> TKO chimera processing</a></li>
+<li class="chapter" data-level="5" data-path="processing-of-tetraploid-complemented-tko-embryos.html"><a href="processing-of-tetraploid-complemented-tko-embryos.html"><i class="fa fa-check"></i><b>5</b> Processing of tetraploid-complemented TKO embryos</a></li>
+<li class="chapter" data-level="6" data-path="processing-of-tetraploid-complemented-control-embryos.html"><a href="processing-of-tetraploid-complemented-control-embryos.html"><i class="fa fa-check"></i><b>6</b> Processing of tetraploid-complemented control embryos</a></li>
+<li class="chapter" data-level="7" data-path="dko-chimera-processing.html"><a href="dko-chimera-processing.html"><i class="fa fa-check"></i><b>7</b> DKO chimera processing</a></li>
+<li class="chapter" data-level="8" data-path="processing-of-whole-embryo-tet-tko-embryos.html"><a href="processing-of-whole-embryo-tet-tko-embryos.html"><i class="fa fa-check"></i><b>8</b> Processing of whole-embryo Tet TKO embryos</a></li>
+<li class="chapter" data-level="9" data-path="methylation-analysis.html"><a href="methylation-analysis.html"><i class="fa fa-check"></i><b>9</b> Methylation analysis</a><ul>
+<li class="chapter" data-level="9.1" data-path="methylation-analysis.html"><a href="methylation-analysis.html#initialization"><i class="fa fa-check"></i><b>9.1</b> Initialization</a></li>
+<li class="chapter" data-level="9.2" data-path="methylation-analysis.html"><a href="methylation-analysis.html#define-genomic-contexts"><i class="fa fa-check"></i><b>9.2</b> Define genomic contexts</a></li>
+<li class="chapter" data-level="9.3" data-path="methylation-analysis.html"><a href="methylation-analysis.html#extract-methylation-data"><i class="fa fa-check"></i><b>9.3</b> Extract methylation data</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="methylation-analysis.html"><a href="methylation-analysis.html#all-cpgs"><i class="fa fa-check"></i><b>9.3.1</b> All CpGs</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="methylation-analysis.html"><a href="methylation-analysis.html#distribution-of-tet-tko-vs-wt-methylation-figure-5b"><i class="fa fa-check"></i><b>9.4</b> Distribution of TET-TKO vs WT methylation (Figure 5B)</a></li>
+<li class="chapter" data-level="9.5" data-path="methylation-analysis.html"><a href="methylation-analysis.html#methylation-in-tads"><i class="fa fa-check"></i><b>9.5</b> Methylation in TADs</a><ul>
+<li class="chapter" data-level="9.5.1" data-path="methylation-analysis.html"><a href="methylation-analysis.html#compare-tad-methylation-in-ctrl-and-tet-tko-figure-5c"><i class="fa fa-check"></i><b>9.5.1</b> Compare TAD methylation in Ctrl and TET-tko (Figure 5C)</a></li>
+<li class="chapter" data-level="9.5.2" data-path="methylation-analysis.html"><a href="methylation-analysis.html#figure-s6a"><i class="fa fa-check"></i><b>9.5.2</b> Figure S6A</a></li>
+</ul></li>
+<li class="chapter" data-level="9.6" data-path="methylation-analysis.html"><a href="methylation-analysis.html#tad-methylation-at-different-tor-regimes-figure-5d"><i class="fa fa-check"></i><b>9.6</b> TAD methylation at different TOR regimes (Figure 5D)</a></li>
+<li class="chapter" data-level="9.7" data-path="methylation-analysis.html"><a href="methylation-analysis.html#low-methylation-hotspots"><i class="fa fa-check"></i><b>9.7</b> Low methylation hotspots</a><ul>
+<li class="chapter" data-level="9.7.1" data-path="methylation-analysis.html"><a href="methylation-analysis.html#figure-s6b"><i class="fa fa-check"></i><b>9.7.1</b> Figure S6B</a></li>
+</ul></li>
+<li class="chapter" data-level="9.8" data-path="methylation-analysis.html"><a href="methylation-analysis.html#k4me3k27me3-hospots-figure-5e"><i class="fa fa-check"></i><b>9.8</b> K4me3/K27me3 hospots (Figure 5E)</a><ul>
+<li class="chapter" data-level="9.8.1" data-path="methylation-analysis.html"><a href="methylation-analysis.html#k4me3-hotspots"><i class="fa fa-check"></i><b>9.8.1</b> K4me3 hotspots</a></li>
+<li class="chapter" data-level="9.8.2" data-path="methylation-analysis.html"><a href="methylation-analysis.html#k27me3-hotspots"><i class="fa fa-check"></i><b>9.8.2</b> K27me3 hotspots</a></li>
+</ul></li>
+<li class="chapter" data-level="9.9" data-path="methylation-analysis.html"><a href="methylation-analysis.html#loci-linked-with-ctcf-occupancy-figure-5f"><i class="fa fa-check"></i><b>9.9</b> Loci linked with CTCF occupancy (Figure 5F)</a></li>
+<li class="chapter" data-level="9.10" data-path="methylation-analysis.html"><a href="methylation-analysis.html#methylation-at-exons-and-non-h3k4me3-promoters-figure-5g"><i class="fa fa-check"></i><b>9.10</b> Methylation at Exons and Non-H3K4me3 Promoters (Figure 5G)</a><ul>
+<li class="chapter" data-level="9.10.1" data-path="methylation-analysis.html"><a href="methylation-analysis.html#exons"><i class="fa fa-check"></i><b>9.10.1</b> Exons</a></li>
+<li class="chapter" data-level="9.10.2" data-path="methylation-analysis.html"><a href="methylation-analysis.html#compare-with-the-wt-figure-s6c"><i class="fa fa-check"></i><b>9.10.2</b> Compare with the WT (Figure S6C):</a></li>
+<li class="chapter" data-level="9.10.3" data-path="methylation-analysis.html"><a href="methylation-analysis.html#promoters"><i class="fa fa-check"></i><b>9.10.3</b> Promoters</a></li>
+<li class="chapter" data-level="9.10.4" data-path="methylation-analysis.html"><a href="methylation-analysis.html#compare-with-the-wt-figure-s6c-1"><i class="fa fa-check"></i><b>9.10.4</b> Compare with the WT (Figure S6C):</a></li>
+</ul></li>
+<li class="chapter" data-level="9.11" data-path="methylation-analysis.html"><a href="methylation-analysis.html#promoter-methylation-vs-expression-figure-s6ds6e"><i class="fa fa-check"></i><b>9.11</b> Promoter methylation vs expression (Figure S6D/S6E)</a></li>
+<li class="chapter" data-level="9.12" data-path="methylation-analysis.html"><a href="methylation-analysis.html#putative-enhancers"><i class="fa fa-check"></i><b>9.12</b> Putative enhancers</a><ul>
+<li class="chapter" data-level="9.12.1" data-path="methylation-analysis.html"><a href="methylation-analysis.html#figure-s6f"><i class="fa fa-check"></i><b>9.12.1</b> Figure S6F</a></li>
+<li class="chapter" data-level="9.12.2" data-path="methylation-analysis.html"><a href="methylation-analysis.html#enhancer-methylation-distribution-figure-5h-figure-s6g"><i class="fa fa-check"></i><b>9.12.2</b> Enhancer methylation distribution (Figure 5H, Figure S6G)</a></li>
+<li class="chapter" data-level="9.12.3" data-path="methylation-analysis.html"><a href="methylation-analysis.html#distribution-of-dna-methylation-around-the-center-of-putative-enhancers-figure-5i"><i class="fa fa-check"></i><b>9.12.3</b> Distribution of DNA methylation around the center of putative enhancers (Figure 5I)</a></li>
+</ul></li>
+<li class="chapter" data-level="9.13" data-path="methylation-analysis.html"><a href="methylation-analysis.html#motifs-figure-s6h"><i class="fa fa-check"></i><b>9.13</b> Motifs (Figure S6H)</a><ul>
+<li class="chapter" data-level="9.13.1" data-path="methylation-analysis.html"><a href="methylation-analysis.html#table-s3"><i class="fa fa-check"></i><b>9.13.1</b> Table S3</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="generate-figures-and-supplementary-figures.html"><a href="generate-figures-and-supplementary-figures.html"><i class="fa fa-check"></i><b>10</b> Generate figures and supplementary figures</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">The intrinsic and extrinsic effects of Tet proteins during gastrulation</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="dko-chimera-processing" class="section level1 hasAnchor">
+<h1><span class="header-section-number">7</span> DKO chimera processing<a href="dko-chimera-processing.html#dko-chimera-processing" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="dko-chimera-processing.html#cb346-1"></a><span class="kw">setwd</span>(here<span class="op">::</span><span class="kw">here</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb347"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb347-1"><a href="dko-chimera-processing.html#cb347-1"></a><span class="kw">library</span>(<span class="st">&quot;metacell&quot;</span>)</span>
+<span id="cb347-2"><a href="dko-chimera-processing.html#cb347-2"></a><span class="kw">library</span>(<span class="st">&quot;tgstat&quot;</span>)</span>
+<span id="cb347-3"><a href="dko-chimera-processing.html#cb347-3"></a><span class="kw">library</span>(<span class="st">&quot;tgconfig&quot;</span>)</span>
+<span id="cb347-4"><a href="dko-chimera-processing.html#cb347-4"></a><span class="kw">library</span>(<span class="st">&quot;Matrix&quot;</span>)</span>
+<span id="cb347-5"><a href="dko-chimera-processing.html#cb347-5"></a><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode" id="cb351"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb351-1"><a href="dko-chimera-processing.html#cb351-1"></a><span class="kw">scdb_init</span>(<span class="st">&quot;scrna_db/&quot;</span>, <span class="dt">force_reinit =</span> T)</span></code></pre></div>
+<pre><code>## initializing scdb to scrna_db/</code></pre>
+<div id="remove-extraembryonic-ectoderm-and-parietal-endoderm-cells-3" class="section level4 hasAnchor">
+<h4><span class="header-section-number">7.0.0.1</span> Remove extraembryonic ectoderm and parietal endoderm cells<a href="dko-chimera-processing.html#remove-extraembryonic-ectoderm-and-parietal-endoderm-cells-3" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+</div>
+<div id="merge-cells-with-the-wildtype-atlas-3" class="section level4 hasAnchor">
+<h4><span class="header-section-number">7.0.0.2</span> Merge cells with the wildtype atlas<a href="dko-chimera-processing.html#merge-cells-with-the-wildtype-atlas-3" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb353"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb353-1"><a href="dko-chimera-processing.html#cb353-1"></a><span class="kw">source</span>(<span class="st">&quot;scripts/pipeline/remove_exe_ectoderm_and_parietal_endo_cls.R&quot;</span>)</span>
+<span id="cb353-2"><a href="dko-chimera-processing.html#cb353-2"></a><span class="kw">source</span>(<span class="st">&quot;scripts/pipeline/merge_umi_mat_with_wt10_umi_mat.R&quot;</span>)</span>
+<span id="cb353-3"><a href="dko-chimera-processing.html#cb353-3"></a></span>
+<span id="cb353-4"><a href="dko-chimera-processing.html#cb353-4"></a><span class="cf">for</span> (mat_nm <span class="cf">in</span> <span class="kw">c</span>(<span class="st">&quot;dko12_chim&quot;</span>, <span class="st">&quot;dko13_chim&quot;</span>, <span class="st">&quot;dko23_chim&quot;</span>)) {</span>
+<span id="cb353-5"><a href="dko-chimera-processing.html#cb353-5"></a>    <span class="kw">print</span>(mat_nm)</span>
+<span id="cb353-6"><a href="dko-chimera-processing.html#cb353-6"></a>    mat &lt;-<span class="st"> </span><span class="kw">scdb_mat</span>(mat_nm)</span>
+<span id="cb353-7"><a href="dko-chimera-processing.html#cb353-7"></a>    mat &lt;-<span class="st"> </span><span class="kw">remove_exe_ectoderm_and_parietal_endoderm</span>(<span class="dt">mat_query =</span> mat)</span>
+<span id="cb353-8"><a href="dko-chimera-processing.html#cb353-8"></a>    mat_new &lt;-<span class="st"> </span><span class="kw">merge_umi_mat_with_wt10</span>(<span class="dt">scmat =</span> mat)</span>
+<span id="cb353-9"><a href="dko-chimera-processing.html#cb353-9"></a>    <span class="kw">scdb_add_mat</span>(<span class="dt">id =</span> <span class="kw">paste0</span>(mat_nm, <span class="st">&quot;_wt10&quot;</span>), <span class="dt">mat =</span> mat_new)</span>
+<span id="cb353-10"><a href="dko-chimera-processing.html#cb353-10"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;dko12_chim&quot;
+## [1] &quot;dko13_chim&quot;
+## [1] &quot;dko23_chim&quot;</code></pre>
+</div>
+<div id="generate-single-cell-balanced-knn-graph-3" class="section level4 hasAnchor">
+<h4><span class="header-section-number">7.0.0.3</span> Generate single-cell balanced kNN-graph<a href="dko-chimera-processing.html#generate-single-cell-balanced-knn-graph-3" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>This step needs the file<br />
+<em>data/tet_tko.bad_genes.txt</em></p>
+<div class="sourceCode" id="cb355"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb355-1"><a href="dko-chimera-processing.html#cb355-1"></a><span class="kw">source</span>(<span class="st">&quot;scripts/pipeline/gen_cgraph.R&quot;</span>)</span></code></pre></div>
+<pre><code>## initializing scdb to scrna_db/</code></pre>
+<div class="sourceCode" id="cb357"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb357-1"><a href="dko-chimera-processing.html#cb357-1"></a><span class="kw">gen_cgraph</span>(<span class="st">&quot;dko12_chim_wt10&quot;</span>, <span class="dt">force_recompute_cgraph =</span> F)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb359"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb359-1"><a href="dko-chimera-processing.html#cb359-1"></a><span class="kw">gen_cgraph</span>(<span class="st">&quot;dko13_chim_wt10&quot;</span>, <span class="dt">force_recompute_cgraph =</span> F)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb361"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb361-1"><a href="dko-chimera-processing.html#cb361-1"></a><span class="kw">gen_cgraph</span>(<span class="st">&quot;dko23_chim_wt10&quot;</span>, <span class="dt">force_recompute_cgraph =</span> F)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="transfer-cell-type-annotation-to-tko-cells-1" class="section level4 hasAnchor">
+<h4><span class="header-section-number">7.0.0.4</span> Transfer cell type annotation to TKO cells<a href="dko-chimera-processing.html#transfer-cell-type-annotation-to-tko-cells-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb363"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb363-1"><a href="dko-chimera-processing.html#cb363-1"></a><span class="kw">source</span>(<span class="st">&quot;scripts/pipeline/transfer_cell_type_annotation.R&quot;</span>)</span>
+<span id="cb363-2"><a href="dko-chimera-processing.html#cb363-2"></a><span class="kw">transfer_color_chimera_tetraploid</span>(<span class="st">&quot;dko12_chim_wt10&quot;</span>)</span>
+<span id="cb363-3"><a href="dko-chimera-processing.html#cb363-3"></a><span class="kw">transfer_color_chimera_tetraploid</span>(<span class="st">&quot;dko13_chim_wt10&quot;</span>)</span>
+<span id="cb363-4"><a href="dko-chimera-processing.html#cb363-4"></a><span class="kw">transfer_color_chimera_tetraploid</span>(<span class="st">&quot;dko23_chim_wt10&quot;</span>)</span></code></pre></div>
+</div>
+<div id="time-chimera-embryos-based-on-their-host-and-ko-cells-1" class="section level4 hasAnchor">
+<h4><span class="header-section-number">7.0.0.5</span> Time chimera embryos based on their host and KO cells<a href="dko-chimera-processing.html#time-chimera-embryos-based-on-their-host-and-ko-cells-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb364"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb364-1"><a href="dko-chimera-processing.html#cb364-1"></a><span class="kw">source</span>(<span class="st">&quot;scripts/pipeline/transfer_time_annotation.R&quot;</span>)</span></code></pre></div>
+<pre><code>## Loading required package: slam</code></pre>
+<pre><code>## Loading required package: sparsesvd</code></pre>
+<div class="sourceCode" id="cb367"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb367-1"><a href="dko-chimera-processing.html#cb367-1"></a><span class="kw">source</span>(<span class="st">&quot;scripts/pipeline/dko_chim_timing.R&quot;</span>)</span>
+<span id="cb367-2"><a href="dko-chimera-processing.html#cb367-2"></a><span class="kw">dko_chim_timing</span>(<span class="st">&quot;dko12_chim_wt10&quot;</span>)</span>
+<span id="cb367-3"><a href="dko-chimera-processing.html#cb367-3"></a><span class="kw">dko_chim_timing</span>(<span class="st">&quot;dko13_chim_wt10&quot;</span>)</span>
+<span id="cb367-4"><a href="dko-chimera-processing.html#cb367-4"></a><span class="kw">dko_chim_timing</span>(<span class="st">&quot;dko23_chim_wt10&quot;</span>)</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="processing-of-tetraploid-complemented-control-embryos.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="processing-of-whole-embryo-tet-tko-embryos.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
